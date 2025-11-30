@@ -14,43 +14,32 @@ object SessionManager {
     fun setSession(accessToken: String): Boolean {
         return try {
             val client = MinecraftClient.getInstance()
-            
-            // Log current session info
-            val currentSession = client.session
-            println("[TokenLogin] Current session: ${currentSession.username} (${currentSession.accountType})")
-            
+
             val profileData = fetchProfile(accessToken) ?: return false
-            
+
             val uuidString = profileData.get("id").asString
             val username = profileData.get("name").asString
-            
+
             val formattedUuid = if (uuidString.contains("-")) {
                 uuidString
             } else {
                 "${uuidString.substring(0, 8)}-${uuidString.substring(8, 12)}-${uuidString.substring(12, 16)}-${uuidString.substring(16, 20)}-${uuidString.substring(20)}"
             }
-            
+
             val uuid = UUID.fromString(formattedUuid)
-            
+
             val session = Session(
                 username,
                 uuid,
                 accessToken,
                 Optional.empty(),
-                Optional.empty(),
-                Session.AccountType.MSA
+                Optional.empty()
             )
-            
+
             (client as wtf.yoraudev.ruby.mixins.MinecraftClientAccessor).setSession(session)
-            
-            // Verify session was updated
-            val newSession = client.session
-            println("[TokenLogin] New session set: ${newSession.username} (${newSession.accountType})")
-            println("[TokenLogin] Session update successful: ${newSession.accessToken == accessToken}")
-            
+
             true
         } catch (e: Exception) {
-            e.printStackTrace()
             false
         }
     }

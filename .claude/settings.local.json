@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(./gradlew clean build:*)",
+      "WebFetch(domain:maven.fabricmc.net)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -17,8 +17,6 @@ object McTokenAuth {
     
     fun authenticate(token: String): AuthResult {
         return try {
-            val requestBody = gson.toJson(mapOf("accessToken" to token))
-            
             val request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.minecraftservices.com/minecraft/profile"))
                 .timeout(Duration.ofSeconds(10))
@@ -26,9 +24,9 @@ object McTokenAuth {
                 .header("Content-Type", "application/json")
                 .GET()
                 .build()
-            
+
             val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-            
+
             when (response.statusCode()) {
                 200 -> {
                     val jsonResponse = gson.fromJson(response.body(), JsonObject::class.java)
